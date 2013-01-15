@@ -1,9 +1,11 @@
-<div class="hero-unit">
-  <h1>Cheerio!</h1>
-  <p>You now have</p>
-  <ul>
-      <li ng-repeat="thing in awesomeThings">{{thing}}</li>
-  </ul>
-  <p>installed.</p>
-  <h3>Enjoy coding! - Yeoman</h3>
+<div class="six columns centered">
+	<div class="message-panel">
+		<div ng-repeat="message in stream">
+			<span class="message-sender">{{message.sender}} says</span><br/>
+			<span class="message-body">{{message.body}}</span>
+		</div>
+	</div>
+	<div>
+		<textarea ng-model="message" on-enter="submit()" cols="30" rows="1"></textarea>
+	</div>
 </div>

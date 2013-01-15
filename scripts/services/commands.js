@@ -1,6 +1,6 @@
 'use strict';
 
-yoruApp.factory('commands', ['yoru', function(yuro) {
+yoruApp.factory('commands', ['firebase', function(firebase) {
 
 	// Public API here
 	return [
@@ -9,7 +9,7 @@ yoruApp.factory('commands', ['yoru', function(yuro) {
 			desc	: "Lets Yoru create a world for you.",
 			regex	: /^create world/i,
 			respond	: function(result) {
-			
+				firebase.createRoom();
 			}
 		},
 		{
@@ -17,7 +17,7 @@ yoruApp.factory('commands', ['yoru', function(yuro) {
 			desc	: "Lets Yoru join you to a world identified by [id].",
 			regex	: /^join world (.+)/i,
 			respond	: function(result) {
-			
+				firebase.joinRoom(result[1]);
 			}
 		},
 		{
