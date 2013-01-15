@@ -1,6 +1,6 @@
 'use strict';
 
-yoruApp.factory('commands', ['firebase', function(firebase) {
+yoruApp.factory('commands', ['firebase', '$location', function(firebase, $location) {
 
 	// Public API here
 	return [
@@ -33,7 +33,10 @@ yoruApp.factory('commands', ['firebase', function(firebase) {
 			desc	: "Lets Yoru provide you the URL of your world.",
 			regex	: /^locate world/i,
 			respond	: function(result) {
-			
+				firebase.sendMessage(
+					$location.absUrl() + firebase.getRoomId(),
+					{ asYoru: true, dontBroadcast: true }
+				);
 			}
 		},
 		{
