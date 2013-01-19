@@ -1,7 +1,7 @@
 'use strict';
 
 yoruApp.controller('MainCtrl', function($scope, yoru) {
-	$scope.stream = [];
+  $scope.stream = [];
 	$scope.message = '';
 	
 	$scope.submit = function() {
@@ -9,7 +9,11 @@ yoruApp.controller('MainCtrl', function($scope, yoru) {
 		$scope.message = '';
 	};
 	
-	yoru.listen(function(e, response) {
+	yoru.listen('yoru:response', function(e, response) {
 		$scope.stream.push(response);
+	});
+	
+	yoru.listen('yoru:clear', function(e, response) {
+		$scope.stream.length = 0;
 	});
 });

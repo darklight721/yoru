@@ -42,9 +42,6 @@ yoruApp.factory('firebase', function() {
 	}
 			
 	return {
-		hasRoom: function() {
-			return roomRef ? true : false;
-		},
 		createRoom: function() {
 			var deferred = $.Deferred();
 			
@@ -127,16 +124,11 @@ yoruApp.factory('firebase', function() {
 				sender: options.asYoru ? yoruName : userName,
 				body: messageBody
 			};
-
-			if (options.dontBroadcast) {
-				$.publish('yoru:response', [message]);
-			}
-			else if (roomRef) {
+			
+			if (roomRef && !options.dontBroadcast) {
 				roomRef.child('messages').push(message);
 			}
 			else {
-				message.sender = yoruName;
-				message.body = 'You have not acquired your citizenship yet.';
 				$.publish('yoru:response', [message]);
 			}
 		},
@@ -145,6 +137,20 @@ yoruApp.factory('firebase', function() {
 		},
 		getUserName: function() {
 			return userName;
+		},
+		getUsers: function() {
+			var deferred = $.Deferred();
+			
+			if (roomRef) {
+				roomRef.child('users').once('value', function(snapshot){
+					deferred.resolve(_.pluck(snapshot.val(), 'name'));
+				});
+			}
+			else {
+				deferred.reject();
+			}
+			
+			return deferred.promise();
 		}
 	};
 });

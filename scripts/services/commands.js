@@ -113,7 +113,20 @@ yoruApp.factory('commands', ['firebase', '$location', function(firebase, $locati
 			desc	: "Lets Yoru provide you the list of all active citizens in your world.",
 			regex	: /^list citizens/i,
 			respond	: function(result) {
-				
+				firebase.getUsers()
+					.done(function(users){
+						firebase.sendMessage(
+							users.length === 0 ? "No active users." :
+								"Here are the active citizens: " + users.join(", "),
+							{ asYoru: true, dontBroadcast: true }
+						);
+					})
+					.fail(function(error){
+						firebase.sendMessage(
+							"Could not get the active citizens.",
+							{ asYoru: true, dontBroadcast: true }
+						);
+					});
 			}
 		},
 		{
@@ -121,7 +134,27 @@ yoruApp.factory('commands', ['firebase', '$location', function(firebase, $locati
 			desc	: "Lets Yoru inquire about [name]'s status (online/offline).",
 			regex	: /^inquire (.+)/i,
 			respond	: function(result) {
-			
+				firebase.getUsers()
+					.done(function(users){
+						var message;
+						if (users.indexOf(result[1]) >= 0) {
+							message = result[1] + " is an active citizen of this world.";
+						}
+						else {
+							message = "There's no one named " + result[1] + " in this world.";
+						}
+						
+						firebase.sendMessage(
+							message ,
+							{ asYoru: true, dontBroadcast: true }
+						);
+					})
+					.fail(function(error){
+						firebase.sendMessage(
+							"Could not get the inquiry.",
+							{ asYoru: true, dontBroadcast: true }
+						);
+					});
 			}
 		},
 		{
@@ -140,7 +173,7 @@ yoruApp.factory('commands', ['firebase', '$location', function(firebase, $locati
 			desc	: "Lets Yoru clear the screen for you.",
 			regex	: /^clear/i,
 			respond	: function(result) {
-			
+				$.publish('yoru:clear');
 			}
 		}
 	];

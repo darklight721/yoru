@@ -5,7 +5,7 @@ yoruApp.factory('yoru', ['commands', 'firebase', function(commands, firebase) {
 
   // Public API here
   return {
-	/*
+  /*
 		feed function receives the message from the controller.
 		It parses the message to determine if it is a command or not.
 		If it's a command, then iterate through all the yoru commands
@@ -32,12 +32,12 @@ yoruApp.factory('yoru', ['commands', 'firebase', function(commands, firebase) {
 		an event when client has received a message response.
 		The response message is passed to the callback as the 2nd parameter.
 	*/
-	listen: function(callback) {
+	listen: function(event, callback) {
 		if (callback) {
-			$.subscribe('yoru:response', callback);
+			$.subscribe(event, callback);
 		}
 		else {
-			$.unsubscribe('yoru:response');
+			$.unsubscribe(event);
 		}
 	}
   };
