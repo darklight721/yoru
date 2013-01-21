@@ -1,7 +1,7 @@
 'use strict';
 
-yoruApp.controller('MainCtrl', function($scope, yoru) {
-  $scope.stream = [];
+yoruApp.controller('MainCtrl', ['$scope', '$routeParams', 'yoru', function($scope, $routeParams, yoru) {
+	$scope.stream = [];
 	$scope.message = '';
 	
 	$scope.submit = function() {
@@ -11,9 +11,16 @@ yoruApp.controller('MainCtrl', function($scope, yoru) {
 	
 	yoru.listen('yoru:response', function(e, response) {
 		$scope.stream.push(response);
+		if (!$scope.$$phase) {
+			$scope.$apply();
+		}
 	});
 	
 	yoru.listen('yoru:clear', function(e, response) {
 		$scope.stream.length = 0;
 	});
-});
+
+	if ($routeParams.roomId) {
+		yoru.feed('yoru join world ' + $routeParams.roomId);
+	}
+}]);

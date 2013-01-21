@@ -1,6 +1,6 @@
 'use strict';
 
-yoruApp.factory('commands', ['firebase', '$location', function(firebase, $location) {
+yoruApp.factory('commands', ['firebase', '$location', '$rootScope', function(firebase, $location, $rootScope) {
 
   // Public API here
 	return [
@@ -10,11 +10,11 @@ yoruApp.factory('commands', ['firebase', '$location', function(firebase, $locati
 			regex	: /^create world/i,
 			respond	: function(result) {
 				firebase.createRoom()
-					.done(function(){
-						firebase.sendMessage(
-							"Welcome to Planet " + firebase.getRoomId(),
-							{ asYoru: true }
-						);
+					.done(function(roomId){
+						$location.path('/' + roomId);
+						if (!$rootScope.$$phase) {
+							$rootScope.$apply();
+						}
 					})
 					.fail(function(error){
 						firebase.sendMessage(
@@ -51,10 +51,10 @@ yoruApp.factory('commands', ['firebase', '$location', function(firebase, $locati
 			respond	: function(result) {
 				firebase.leaveRoom()
 					.done(function(){
-						firebase.sendMessage(
-							"You have just left the world.",
-							{ asYoru: true, dontBroadcast: true }
-						);
+						$location.path('/');
+						if (!$rootScope.$$phase) {
+							$rootScope.$apply();
+						}
 					})
 					.fail(function(error){
 						firebase.sendMessage(

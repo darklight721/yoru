@@ -1,7 +1,6 @@
 'use strict';
 
 yoruApp.factory('yoru', ['commands', 'firebase', function(commands, firebase) {
-  var yoruCommands = commands;
 
   // Public API here
   return {
@@ -15,7 +14,7 @@ yoruApp.factory('yoru', ['commands', 'firebase', function(commands, firebase) {
     feed: function(message) {
 		var command = $.trim(message).match(/^yoru (.+)/i);
 		if (command && command[1]) {
-			$.each(yoruCommands, function(){
+			$.each(commands, function(){
 				var result = command[1].match(this.regex);
 				if (result) {
 					this.respond(result);

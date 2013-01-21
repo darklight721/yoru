@@ -14,7 +14,7 @@ yoruApp.factory('firebase', function() {
 				callback && callback(success);
 			});
 		}
-		callback(false);
+		callback && callback(false);
 		return null;
 	}
 
@@ -49,12 +49,9 @@ yoruApp.factory('firebase', function() {
 				deferred.reject(400);
 			}
 			else {
-				roomRef = roomsRef.push();
-				userRef = pushUserTo(roomRef, function(success){
-					success ? deferred.resolve() : deferred.reject(500);
+				roomRef = roomsRef.push({ type : 'World' }, function(success){
+					success ? deferred.resolve(roomRef.name()) : deferred.reject(500);
 				});
-				userRef.removeOnDisconnect();
-				startListeningTo(roomRef);
 			}
 			
 			return deferred.promise();
@@ -62,7 +59,7 @@ yoruApp.factory('firebase', function() {
 		joinRoom: function(id) {
 			var deferred = $.Deferred();
 			
-			if (roomRef) {
+			if (userRef) {
 				deferred.reject(400);
 			}
 			else {
